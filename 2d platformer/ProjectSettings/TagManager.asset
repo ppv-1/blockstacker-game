@@ -41,3 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: grid
+    uniqueID: 935585841
+    locked: 0
+  - name: ghost tilemap
+    uniqueID: 2590330617
+    locked: 0
+  - name: tilemap
+    uniqueID: 1096367539
+    locked: 0
+  - name: border
+    uniqueID: 2499033225
+    locked: 0
