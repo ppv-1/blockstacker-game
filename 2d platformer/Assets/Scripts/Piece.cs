@@ -79,6 +79,7 @@ public class Piece : MonoBehaviour
 
     public void Lock(){
         this.board.Set(this);
+        this.board.ClearLines();
         this.board.SpawnPiece();
     }
 
@@ -95,7 +96,7 @@ public class Piece : MonoBehaviour
         Vector3Int newPosition = this.position;
         newPosition.x += translation.x;
         newPosition.y += translation.y;
-        bool valid = this.board.isValidPosition(this, newPosition);
+        bool valid = this.board.IsValidPosition(this, newPosition);
         if(valid){
             this.position = newPosition;
             this.lockTime = 0f;
