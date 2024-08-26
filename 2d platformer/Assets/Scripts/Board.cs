@@ -10,9 +10,14 @@ public class Board : MonoBehaviour
     public Piece holdPiece { get; private set; }
     public int pieceCount;
     public TetrominoData[] bag;
+    public Vector3Int[] holdCells;
+    public int holdCellsWidth = 5;
+    public int holdCellsHeight = 3;
     public Queue<TetrominoData> pieceQueue = new Queue<TetrominoData>();
     public Tilemap tilemap { get; private set; }
     public Vector3Int spawnPosition;
+    public Vector3Int holdPosition = new Vector3Int(-8, -4, 0);
+    public Vector3Int holdCellsPosition = new Vector3Int(-8, -4, 0);
     public Vector2Int boardSize = new Vector2Int(10, 22);
     public RectInt Bounds
     {
@@ -38,6 +43,7 @@ public class Board : MonoBehaviour
         foreach(TetrominoData t in bag){
             this.pieceQueue.Enqueue(t);
         }
+        GenerateHoldCells();
         
 
     }
@@ -68,6 +74,25 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void GenerateHoldCells()
+    {
+        holdCells = new Vector3Int[holdCellsWidth * holdCellsHeight];
+        int index = 0;
+
+        int halfWidth = holdCellsWidth / 2;
+        int halfHeight = holdCellsHeight / 2;
+
+        for (int x = -halfWidth; x <= halfWidth; x++)
+        {
+            for (int y = -halfHeight; y <= halfHeight; y++)
+            {
+                holdCells[index] = new Vector3Int(x, y, 0);
+                index++;
+            }
+        }
+
+    }
+
     public void ManageQueue(){
         RandomizeBag(bag);
         foreach(TetrominoData t in bag){
@@ -75,9 +100,6 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void HoldPiece(){
-        Clear(this.activePiece);
-    }
 
     public void SpawnPiece(){        
         TetrominoData data = this.pieceQueue.Dequeue();
@@ -107,6 +129,31 @@ public class Board : MonoBehaviour
             Vector3Int tilePosition = piece.cells[i] + piece.position;
             this.tilemap.SetTile(tilePosition, null);
         }
+    }
+
+    public void ClearHold(){
+        Debug.Log(holdCells.Length);
+        for(int i = 0; i < holdCells.Length; i++){
+            Vector3Int tilePosition = holdCells[i] + spawnPosition + holdPosition;
+
+            Debug.Log(tilePosition);
+            this.tilemap.SetTile(tilePosition, null);
+        }
+    }
+
+    public void HoldPiece(){
+        if(this.holdPiece != null){
+            ClearHold();
+        }
+        this.holdPiece = this.activePiece;
+
+        // set the hold piece in the border
+        for(int i = 0; i < holdPiece.cells.Length; i++){
+            Vector3Int tilePosition = holdPiece.cells[i] + spawnPosition + holdPosition;
+            this.tilemap.SetTile(tilePosition, holdPiece.data.tile);
+        }
+        Clear(this.activePiece);
+
     }
 
     public bool IsValidPosition(Piece piece, Vector3Int position){

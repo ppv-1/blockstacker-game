@@ -63,7 +63,6 @@ public class Piece : MonoBehaviour
         }
 
         if(Input.GetKeyDown(KeyCode.LeftShift)){
-            Debug.Log("hello");
             Hold();
         }
 
@@ -75,7 +74,8 @@ public class Piece : MonoBehaviour
     }
 
     private void Hold(){
-
+        this.board.HoldPiece();
+        this.board.SpawnPiece();
     }
 
     private void Step(){
