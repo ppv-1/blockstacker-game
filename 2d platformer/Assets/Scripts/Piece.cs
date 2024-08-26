@@ -74,8 +74,18 @@ public class Piece : MonoBehaviour
     }
 
     private void Hold(){
-        this.board.HoldPiece();
-        this.board.SpawnPiece();
+        //if user pressed hold, set isHeld to true, so user cannot press hold again, 
+        // once the piece locks into place, allow user to press hold again
+        // special case for first hold
+        if(this.board.isHeld == false && this.board.holdPieceData.cells == null){
+            this.board.HoldPiece();
+            this.board.SpawnPiece();
+            this.board.isHeld = true;
+        } else if (this.board.isHeld == false){
+            this.board.HoldPiece();
+            this.board.SpawnHoldPiece();
+            this.board.isHeld = true;
+        }
     }
 
     private void Step(){
@@ -90,6 +100,7 @@ public class Piece : MonoBehaviour
         this.board.Set(this);
         this.board.ClearLines();
         this.board.SpawnPiece();
+        this.board.isHeld = false;
     }
 
     public void HardDrop()

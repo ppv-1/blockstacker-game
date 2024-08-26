@@ -7,12 +7,20 @@ public class Board : MonoBehaviour
 {
     public TetrominoData[] tetrominos;
     public Piece activePiece { get; private set; }
-    public Piece holdPiece { get; private set; }
+    
     public int pieceCount;
     public TetrominoData[] bag;
+    [Header("Hold Settings")]
+    
     public Vector3Int[] holdCells;
+    public Piece holdPiece { get; private set; }
+    public TetrominoData holdPieceData { get; private set; }
+    private Piece tempPiece;
+    private TetrominoData tempHoldPieceData;
     public int holdCellsWidth = 5;
     public int holdCellsHeight = 3;
+    public bool isHeld;
+    
     public Queue<TetrominoData> pieceQueue = new Queue<TetrominoData>();
     public Tilemap tilemap { get; private set; }
     public Vector3Int spawnPosition;
@@ -31,6 +39,8 @@ public class Board : MonoBehaviour
     private void Awake(){
         this.tilemap = GetComponentInChildren<Tilemap>();
         this.activePiece = GetComponentInChildren<Piece>();
+        this.holdPiece = GetComponentInChildren<Piece>();
+        this.tempPiece = GetComponentInChildren<Piece>();
         for(int i = 0; i < this.tetrominos.Length; i++){
             this.tetrominos[i].Initialize();
         }
@@ -103,9 +113,24 @@ public class Board : MonoBehaviour
 
     public void SpawnPiece(){        
         TetrominoData data = this.pieceQueue.Dequeue();
+        // if(this.holdPiece != null){Debug.Log("before init hold piece: " +this.holdPiece.data.tetromino);}
         this.activePiece.Initialize(this, spawnPosition, data);
+        // if(this.holdPiece != null){Debug.Log("after init hold piece: " +this.holdPiece.data.tetromino);}
         if(IsValidPosition(this.activePiece, this.spawnPosition)){
             Set(activePiece);
+            this.pieceCount++;
+        } else{
+            GameOver();
+        }
+        // Debug.Log("fucking hold piece: " +this.holdPiece.data.tetromino);
+
+    }
+
+    public void SpawnHoldPiece(){        
+        TetrominoData data = this.tempHoldPieceData;
+        this.tempPiece.Initialize(this, spawnPosition, data);
+        if(IsValidPosition(this.tempPiece, this.spawnPosition)){
+            Set(tempPiece);
             this.pieceCount++;
         } else{
             GameOver();
@@ -132,27 +157,26 @@ public class Board : MonoBehaviour
     }
 
     public void ClearHold(){
-        Debug.Log(holdCells.Length);
         for(int i = 0; i < holdCells.Length; i++){
             Vector3Int tilePosition = holdCells[i] + spawnPosition + holdPosition;
-
-            Debug.Log(tilePosition);
             this.tilemap.SetTile(tilePosition, null);
         }
     }
 
     public void HoldPiece(){
-        if(this.holdPiece != null){
+        // store hold piece in temp piece for spawning
+        Clear(this.activePiece);
+        if(this.holdPieceData.cells != null){
+            tempHoldPieceData = this.holdPieceData;
             ClearHold();
         }
-        this.holdPiece = this.activePiece;
+        // change active piece to be held
+        this.holdPieceData = this.activePiece.data;
 
         // set the hold piece in the border
-        for(int i = 0; i < holdPiece.cells.Length; i++){
-            Vector3Int tilePosition = holdPiece.cells[i] + spawnPosition + holdPosition;
-            this.tilemap.SetTile(tilePosition, holdPiece.data.tile);
-        }
-        Clear(this.activePiece);
+        this.holdPiece.Initialize(this, spawnPosition + holdPosition, holdPieceData);
+        Set(activePiece);
+        
 
     }
 
