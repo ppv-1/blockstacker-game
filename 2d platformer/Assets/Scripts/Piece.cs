@@ -62,11 +62,20 @@ public class Piece : MonoBehaviour
             HardDrop();
         }
 
+        if(Input.GetKeyDown(KeyCode.LeftShift)){
+            Debug.Log("hello");
+            Hold();
+        }
+
         if(Time.time >= this.stepTime){
             Step();
         }
 
         this.board.Set(this);
+    }
+
+    private void Hold(){
+
     }
 
     private void Step(){

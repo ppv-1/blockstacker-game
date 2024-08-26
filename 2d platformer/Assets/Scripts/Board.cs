@@ -7,6 +7,7 @@ public class Board : MonoBehaviour
 {
     public TetrominoData[] tetrominos;
     public Piece activePiece { get; private set; }
+    public Piece holdPiece { get; private set; }
     public int pieceCount;
     public TetrominoData[] bag;
     public Queue<TetrominoData> pieceQueue = new Queue<TetrominoData>();
@@ -72,12 +73,13 @@ public class Board : MonoBehaviour
         foreach(TetrominoData t in bag){
             this.pieceQueue.Enqueue(t);
         }
-        
     }
 
-    public void SpawnPiece(){
-        // int random = Random.Range(0, this.tetrominos.Length;
-        
+    public void HoldPiece(){
+        Clear(this.activePiece);
+    }
+
+    public void SpawnPiece(){        
         TetrominoData data = this.pieceQueue.Dequeue();
         this.activePiece.Initialize(this, spawnPosition, data);
         if(IsValidPosition(this.activePiece, this.spawnPosition)){
