@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "2d platformer.sln"
+    "dotnet.defaultSolution": "blockstacker-game.sln"
 }
