@@ -148,8 +148,8 @@ Transform:
   m_GameObject: {fileID: 140388091}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.388, y: 8.01, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -8.3998, y: 7.7034, z: 0}
+  m_LocalScale: {x: 1.003573, y: 1.1485342, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 448032750}
@@ -785,7 +785,13 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: 6ebe7706b3d47324c8c4d3259b483edc, type: 2}
   - tetromino: 6
     tile: {fileID: 11400000, guid: 57b98c0ac97312749bc14d2aa57ba5fd, type: 2}
+  holdCells: []
+  holdCellsWidth: 5
+  holdCellsHeight: 3
+  isHeld: 0
   spawnPosition: {x: -1, y: 10, z: 0}
+  holdPosition: {x: -8, y: -4, z: 0}
+  holdCellsPosition: {x: -13, y: -4, z: 0}
   boardSize: {x: 10, y: 23}
 --- !u!1 &1738460937
 GameObject:
