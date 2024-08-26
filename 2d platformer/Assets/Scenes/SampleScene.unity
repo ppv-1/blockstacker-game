@@ -769,6 +769,22 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: 6ebe7706b3d47324c8c4d3259b483edc, type: 2}
   - tetromino: 6
     tile: {fileID: 11400000, guid: 57b98c0ac97312749bc14d2aa57ba5fd, type: 2}
+  pieceCount: 0
+  bag:
+  - tetromino: 0
+    tile: {fileID: 11400000, guid: 8fc6bf1bc8df3b64db485644fef96cfe, type: 2}
+  - tetromino: 1
+    tile: {fileID: 11400000, guid: 76a478e450f16314d813b84b9c2e6164, type: 2}
+  - tetromino: 2
+    tile: {fileID: 11400000, guid: 76c883558c63bab45897ed7795648f6a, type: 2}
+  - tetromino: 3
+    tile: {fileID: 11400000, guid: cce907ad1e08a664cb12d6d9f1a5a7d3, type: 2}
+  - tetromino: 4
+    tile: {fileID: 11400000, guid: 43f9b9d83f29b35489398867ba979988, type: 2}
+  - tetromino: 5
+    tile: {fileID: 11400000, guid: 6ebe7706b3d47324c8c4d3259b483edc, type: 2}
+  - tetromino: 6
+    tile: {fileID: 11400000, guid: 57b98c0ac97312749bc14d2aa57ba5fd, type: 2}
   spawnPosition: {x: -1, y: 10, z: 0}
   boardSize: {x: 10, y: 23}
 --- !u!1 &1738460937
