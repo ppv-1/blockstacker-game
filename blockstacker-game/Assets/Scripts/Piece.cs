@@ -12,6 +12,17 @@ public class Piece : MonoBehaviour
     public Vector3Int[] cells { get; private set; }
     public int rotationIndex { get; private set; }
 
+    [Header("controls")]
+    public float dasDelay = 0.15f;
+    public float moveRepeatDelay = 0.05f; // Delay between repeated moves
+
+    private float dasTimer = 0f;
+    private float moveRepeatTimer = 0f;
+    private bool isMovingLeft = false;
+    private bool isMovingRight = false;
+    [SerializeField] private float softDropSpeed = 0.1f; 
+    private float softDropTimer;
+
     public float stepDelay = 1f;
     public float lockDelay = 0.5f;
 
@@ -48,15 +59,84 @@ public class Piece : MonoBehaviour
         }
 
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow)){
+        // Initial move to the left
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
             Move(Vector2Int.left);
-        } else if (Input.GetKeyDown(KeyCode.RightArrow)){
+            isMovingLeft = true;
+            isMovingRight = false;
+            dasTimer = Time.time + dasDelay;
+            moveRepeatTimer = dasTimer;
+        }
+        // Initial move to the right
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
             Move(Vector2Int.right);
+            isMovingRight = true;
+            isMovingLeft = false;
+            dasTimer = Time.time + dasDelay;
+            moveRepeatTimer = dasTimer;
         }
 
-        if(Input.GetKeyDown(KeyCode.DownArrow)){
-            Move(Vector2Int.down);
+        // Auto-shift to the left
+        if (Input.GetKey(KeyCode.LeftArrow) && isMovingLeft)
+        {
+            if (Time.time >= dasTimer && Time.time >= moveRepeatTimer)
+            {
+                Move(Vector2Int.left);
+                moveRepeatTimer = Time.time + moveRepeatDelay;
+            }
         }
+        // Auto-shift to the right
+        else if (Input.GetKey(KeyCode.RightArrow) && isMovingRight)
+        {
+            if (Time.time >= dasTimer && Time.time >= moveRepeatTimer)
+            {
+                Move(Vector2Int.right);
+                moveRepeatTimer = Time.time + moveRepeatDelay;
+            }
+        }
+
+        // Reset movement flags when keys are released
+        if (Input.GetKeyUp(KeyCode.LeftArrow))
+        {
+            isMovingLeft = false;
+        }
+        if (Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            isMovingRight = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)){
+            this.board.GameOver();
+        }
+
+        // if (Input.GetKeyDown(KeyCode.LeftArrow)){
+        //     Move(Vector2Int.left);
+        // } else if (Input.GetKeyDown(KeyCode.RightArrow)){
+        //     Move(Vector2Int.right);
+        // }
+
+
+        // Immediate drop on key press
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            Move(Vector2Int.down);
+            softDropTimer = Time.time + softDropSpeed; // Start the timer for continuous drop
+        }
+
+        // Continuous drop while holding the down arrow key
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            if (Time.time >= softDropTimer)
+            {
+                Move(Vector2Int.down);
+                softDropTimer = Time.time + softDropSpeed; // Reset the timer for the next drop
+            }
+        }
+        // if(Input.GetKeyDown(KeyCode.DownArrow)){
+        //     Move(Vector2Int.down);
+        // }
 
         if(Input.GetKeyDown(KeyCode.Space)){
             HardDrop();

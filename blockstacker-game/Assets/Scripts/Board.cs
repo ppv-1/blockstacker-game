@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Board : MonoBehaviour
 {
@@ -11,7 +12,6 @@ public class Board : MonoBehaviour
     public int pieceCount;
     public TetrominoData[] bag;
     [Header("Hold Settings")]
-    
     public Vector3Int[] holdCells;
     public Piece holdPiece { get; private set; }
     public TetrominoData holdPieceData { get; private set; }
@@ -158,7 +158,6 @@ public class Board : MonoBehaviour
     }
 
     public void ClearQueueCells(){
-        Debug.Log("clearing cells");
         for(int i = 0; i < queueCells.Length; i++){
             Vector3Int tilePosition = queueCells[i] + spawnPosition + queueCellsPosition;
             this.tilemap.SetTile(tilePosition, null);
@@ -188,9 +187,10 @@ public class Board : MonoBehaviour
 
     }
 
-    private void GameOver(){
-        Debug.Log("game over");
+    public void GameOver(){
+        Debug.Log("Game Over!");
         this.tilemap.ClearAllTiles();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void Set(Piece piece){
