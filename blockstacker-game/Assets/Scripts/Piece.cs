@@ -101,6 +101,7 @@ public class Piece : MonoBehaviour
         this.board.ClearLines();
         this.board.SpawnPiece();
         this.board.isHeld = false;
+        this.board.pieceCount++;
     }
 
     public void HardDrop()

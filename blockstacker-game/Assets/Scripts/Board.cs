@@ -19,13 +19,23 @@ public class Board : MonoBehaviour
     private TetrominoData tempHoldPieceData;
     public int holdCellsWidth = 5;
     public int holdCellsHeight = 3;
+    public Vector3Int holdPosition = new Vector3Int(-8, -4, 0);
     public bool isHeld;
     
+    [Header("Queue Settings")]
     public Queue<TetrominoData> pieceQueue = new Queue<TetrominoData>();
+    public TetrominoData[] pieceQueueDisplay;
+    public Vector3Int queuePosition = new Vector3Int(8, -4, 0);
+    public int queueDisplayLength = 5;
+    private bool hasAddedPieces = false;
+    public int queueCellsWidth = 5;
+    public int queueCellsHeight = 17;
+    public Vector3Int queueCellsPosition = new Vector3Int(8, -6, 0);
+    public Vector3Int[] queueCells;
+
     public Tilemap tilemap { get; private set; }
     public Vector3Int spawnPosition;
-    public Vector3Int holdPosition = new Vector3Int(-8, -4, 0);
-    public Vector3Int holdCellsPosition = new Vector3Int(-8, -4, 0);
+    
     public Vector2Int boardSize = new Vector2Int(10, 22);
     public RectInt Bounds
     {
@@ -54,6 +64,7 @@ public class Board : MonoBehaviour
             this.pieceQueue.Enqueue(t);
         }
         GenerateHoldCells();
+        GenerateQueueCells();
         
 
     }
@@ -63,8 +74,14 @@ public class Board : MonoBehaviour
     }
 
     private void Update(){
-        if(this.pieceCount % 7 == 0){
-            ManageQueue();
+        // called twice to have piece to show in queue
+        if (!hasAddedPieces && this.pieceCount % 14 == 0){
+            addPiecesToQueue();
+            addPiecesToQueue();
+            hasAddedPieces = true;  // Set the flag to true to prevent further calls
+        }
+        else if (this.pieceCount % 14 != 0){
+            hasAddedPieces = false;  // Reset the flag when the condition is no longer met
         }
     }
 
@@ -103,27 +120,61 @@ public class Board : MonoBehaviour
 
     }
 
-    public void ManageQueue(){
+    public void GenerateQueueCells()
+    {
+        queueCells = new Vector3Int[queueCellsWidth * queueCellsHeight];
+        int index = 0;
+
+        int halfWidth = queueCellsWidth / 2;
+        int halfHeight = queueCellsHeight / 2;
+
+        for (int x = -halfWidth; x <= halfWidth; x++)
+        {
+            for (int y = -halfHeight; y <= halfHeight; y++)
+            {
+                queueCells[index] = new Vector3Int(x, y, 0);
+                index++;
+            }
+        }
+
+    }
+
+    public void addPiecesToQueue(){
         RandomizeBag(bag);
         foreach(TetrominoData t in bag){
             this.pieceQueue.Enqueue(t);
         }
     }
 
+    public void UpdateQueueDisplay(Queue<TetrominoData> queue){
+        ClearQueueCells();
+        pieceQueueDisplay = queue.ToArray();
+        
+        for (int i = 0; i < queueDisplayLength; i++){
+            Piece displayPiece = GetComponentInChildren<Piece>();
+            displayPiece.Initialize(this, spawnPosition + queuePosition + new Vector3Int(0, -3 * i, 0), pieceQueueDisplay[i]);
+            Set(displayPiece);
+        }
+    }
+
+    public void ClearQueueCells(){
+        Debug.Log("clearing cells");
+        for(int i = 0; i < queueCells.Length; i++){
+            Vector3Int tilePosition = queueCells[i] + spawnPosition + queueCellsPosition;
+            this.tilemap.SetTile(tilePosition, null);
+        }
+    }
 
     public void SpawnPiece(){        
         TetrominoData data = this.pieceQueue.Dequeue();
-        // if(this.holdPiece != null){Debug.Log("before init hold piece: " +this.holdPiece.data.tetromino);}
+        UpdateQueueDisplay(this.pieceQueue);
         this.activePiece.Initialize(this, spawnPosition, data);
-        // if(this.holdPiece != null){Debug.Log("after init hold piece: " +this.holdPiece.data.tetromino);}
         if(IsValidPosition(this.activePiece, this.spawnPosition)){
             Set(activePiece);
-            this.pieceCount++;
+            
         } else{
             GameOver();
         }
-        // Debug.Log("fucking hold piece: " +this.holdPiece.data.tetromino);
-
     }
 
     public void SpawnHoldPiece(){        
@@ -131,7 +182,6 @@ public class Board : MonoBehaviour
         this.tempPiece.Initialize(this, spawnPosition, data);
         if(IsValidPosition(this.tempPiece, this.spawnPosition)){
             Set(tempPiece);
-            this.pieceCount++;
         } else{
             GameOver();
         }
@@ -139,6 +189,7 @@ public class Board : MonoBehaviour
     }
 
     private void GameOver(){
+        Debug.Log("game over");
         this.tilemap.ClearAllTiles();
     }
 
@@ -156,7 +207,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    public void ClearHold(){
+    public void ClearHoldCells(){
         for(int i = 0; i < holdCells.Length; i++){
             Vector3Int tilePosition = holdCells[i] + spawnPosition + holdPosition;
             this.tilemap.SetTile(tilePosition, null);
@@ -168,7 +219,7 @@ public class Board : MonoBehaviour
         Clear(this.activePiece);
         if(this.holdPieceData.cells != null){
             tempHoldPieceData = this.holdPieceData;
-            ClearHold();
+            ClearHoldCells();
         }
         // change active piece to be held
         this.holdPieceData = this.activePiece.data;
