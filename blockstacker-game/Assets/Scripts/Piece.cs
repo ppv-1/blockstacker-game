@@ -150,6 +150,15 @@ public class Piece : MonoBehaviour
             Step();
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+
+            #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+            #endif
+        }
+
         this.board.Set(this);
     }
 
