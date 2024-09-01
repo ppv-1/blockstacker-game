@@ -111,12 +111,7 @@ public class Piece : MonoBehaviour
             this.board.GameOver();
         }
 
-        // if (Input.GetKeyDown(KeyCode.LeftArrow)){
-        //     Move(Vector2Int.left);
-        // } else if (Input.GetKeyDown(KeyCode.RightArrow)){
-        //     Move(Vector2Int.right);
-        // }
-
+      
 
         // Immediate drop on key press
         if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -256,7 +251,13 @@ public class Piece : MonoBehaviour
         int wallKickIndex = GetWallKickIndex(rotationIndex, rotationDirection);
         for(int i = 0; i < this.data.wallKicks.GetLength(1); i++){
             Vector2Int translation = this.data.wallKicks[wallKickIndex, i];
-            if(Move(translation)){
+            Debug.Log("testing wall kick" + translation);
+            Vector3Int newPosition = this.position + (Vector3Int)translation;
+
+            if (this.board.IsValidPosition(this, newPosition))
+            {
+                this.position = newPosition;
+                this.lockTime = 0f; // Reset lock timer after a successful move
                 return true;
             }
         }
