@@ -6,7 +6,7 @@
 ## To try the game out (WINDOWS ONLY)
 1. Clone this repository
 2. Unzip blockstacker-game.zip
-3. Click on the blockstacker-game.exe file tor un
+3. Click on the blockstacker-game.exe file to run
 
 ## Gameplay
 ![gameplay](gameplay.png "gameplay")
