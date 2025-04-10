@@ -1,7 +1,7 @@
 # Tetris-like game
-*Inspired by tetr.io*
+Inspired by tetr.io
 
-*Done in C# and Unity*
+Done in C# and Unity
 
 ## To try the game out (WINDOWS ONLY)
 1. Clone this repository
@@ -27,11 +27,12 @@
 
 
 ## Unresolved and known issues
-1. Super Rotation System(SRS) does not work as intended 
+1. Super Rotation System (SRS) does not work as intended 
 2. User Inteface incomplete
 3. Lack of customizability of controls (ARR, DAS, keybinds)
 4. No sound effects, music etc.
 
 ## References
 Assets from [here](https://you.have.fail/tetrioplus/)
+
 Skin name: Light Four.lol by Sausage2580
